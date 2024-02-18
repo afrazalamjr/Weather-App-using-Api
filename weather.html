@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather app</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="card">
+
+        <div class="search-box">
+            <input type="text" placeholder="Enter City name" spellcheck="false">
+            <button><img src="images/search.png"></button>
+        </div>
+        <div class="error">
+            <p>eror</p>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png " class="weather-icon">
+            <h1 class="temp"></h1>
+            <h2 class="city"></h2>
+            <div class="details ">
+                <div class="col">
+                    <img src="images/humidity.png">
+                    <div>
+                        <p class="humidity"></p>
+                        <p>humidity</p>
+                    </div>
+                    
+                </div>
+                <div class="col">
+                    <img src="images/wind.png">
+                    <div>
+                        <p class="wind"></p>
+                        <p>Wind Speed</p>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <script>
+        const apiKey = "yOUR API KEY";
+        const apiUrl = "Your api URL";
+    
+        const searchBox = document.querySelector(".search-box input");
+        const searchBtn = document.querySelector(".search-box button");
+        const weathericon = document.querySelector(".weather-icon");    
+        async function checkWeather(city) {
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+            if(response.status== 404){
+                document.querySelector(".error").style.display="block"
+                document.querySelector(".weather").style.display="null"
+            }
+            const data = await response.json();
+    
+        if( searchBox) 
+
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + '°C';
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = data.wind.speed + "km/hr";
+
+            
+
+            if(data.weather[0].main == "Clouds"){
+                weathericon.src ="images/clouds.png";
+            }
+           else if(data.weather[0].main == "Clear"){
+                weathericon.src ="images/clear.png";
+            }
+           else if(data.weather[0].main == "Rain"){
+                weathericon.src ="images/rain.png";
+            }
+           else if(data.weather[0].main == "Drizzle"){
+                weathericon.src ="images/drizzle.png";
+            }
+           else if(data.weather[0].main == "Mist"){
+                weathericon.src ="images/mist.png";
+            }
+            if(data.weather[0].main == "Snow"){
+                weathericon.src ="images/snow.png";
+            }
+        
+        document.querySelector(".weather").style.display="block"
+        }
+    
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        });
+    
+        // You might want to call checkWeather() with a default city or leave it empty, depending on your use case.
+        // Example with a default city:
+        // checkWeather("Karachi");
+    </script>
+    
+
+</body>
+</html>
